@@ -1,6 +1,6 @@
 JAVA
 
-package com.example.myapplication;
+package com.example.rejestr;
 
 import android.os.Bundle;
 import android.util.Patterns;
@@ -10,36 +10,40 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 public class MainActivity extends AppCompatActivity {
 
-    private EditText editImie;
-    private EditText editNazwisko;
-    private EditText editEmail;
-    private EditText editHaslo;
-    private Button buttonZarejestruj;
+    private EditText Imie;
+    private EditText Nazwisko;
+    private EditText Email;
+    private EditText Haslo;
+    private Button btnZarejestruj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editImie = findViewById(R.id.editImie);
-        editNazwisko = findViewById(R.id.editNazwisko);
-        editEmail = findViewById(R.id.editEmail);
-        editHaslo = findViewById(R.id.editHaslo);
-        buttonZarejestruj = findViewById(R.id.buttonZarejestruj);
+        Imie = findViewById(R.id.Imie);
+        Nazwisko = findViewById(R.id.Nazwisko);
+        Email = findViewById(R.id.Email);
+        Haslo = findViewById(R.id.Haslo);
+        btnZarejestruj = findViewById(R.id.btnZarejestruj);
 
-        buttonZarejestruj.setOnClickListener(v -> zarejestruj());
+        btnZarejestruj.setOnClickListener(v -> zarejestruj());
     }
 
     private void zarejestruj() {
 
-        String imie = editImie.getText().toString().trim();
-        String nazwisko = editNazwisko.getText().toString().trim();
-        String email = editEmail.getText().toString().trim();
-        String haslo = editHaslo.getText().toString();
+        String imie = Imie.getText().toString().trim();
+        String nazwisko = Nazwisko.getText().toString().trim();
+        String email = Email.getText().toString().trim();
+        String haslo = Haslo.getText().toString();
 
- if(imie.isEmpty() || nazwisko.isEmpty() || email.isEmpty() || haslo.isEmpty()){
+        if(imie.isEmpty() || nazwisko.isEmpty() || email.isEmpty() || haslo.isEmpty()){
             System.out.println("Uzupełnij wszystkie pola!!!");
             System.exit(0);
         };
@@ -62,7 +66,27 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Dane są prawidłowe");
         System.exit(0);
     }
-}
+    
+    private void Zapisz(){
+        String imie = Imie.getText().toString().trim();
+        String nazwisko = Nazwisko.getText().toString().trim();
+        String email = Email.getText().toString().trim();
+        String haslo = Haslo.getText().toString().trim();
+        
+        String data = "Imię: " + imie + " Nazwisko: " + nazwisko + " Email:  " + email + " Hasło: " + haslo;
+        
+        try(FileOutputStream fos = openFileOutput(
+                "dane.txt",
+                MODE_APPEND
+        )) {
+            fos.write(data.getBytes(StandardCharsets.UTF_8));
+        }catch (IOException e){
+            Toast.makeText(
+                    this, "błąd zapisu",Toast.LENGTH_SHORT
+            ).show();
+        }
+    };
+};
 
 activity_main.xml
 
