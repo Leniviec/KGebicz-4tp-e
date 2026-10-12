@@ -39,47 +39,28 @@ public class MainActivity extends AppCompatActivity {
         String email = editEmail.getText().toString().trim();
         String haslo = editHaslo.getText().toString();
 
-        if (imie.isEmpty()) {
-            editImie.setError("Podaj imię");
-            editImie.requestFocus();
-            return;
-        }
+ if(imie.isEmpty() || nazwisko.isEmpty() || email.isEmpty() || haslo.isEmpty()){
+            System.out.println("Uzupełnij wszystkie pola!!!");
+            System.exit(0);
+        };
+        boolean zawiera;
+        if (email.contains("@") && email.contains(".")) {
+            zawiera = true;
+        } else {
+            System.out.println("Podaj poprawny adres email!!");
+            System.exit(0);
+        };
 
-        if (nazwisko.isEmpty()) {
-            editNazwisko.setError("Podaj nazwisko");
-            editNazwisko.requestFocus();
-            return;
-        }
+        if (haslo.length() < 8
+                || !haslo.matches(".*[A-Z].*")
+                || !haslo.matches(".*[a-z].*")
+                || !haslo.matches(".*[!@#$%^&*()_+{}?;':<>,./\\-=].*")) {
 
-        if (email.isEmpty()) {
-            editEmail.setError("Podaj adres e-mail");
-            editEmail.requestFocus();
-            return;
+            System.out.println("Hasło musi mieć co najmniej 8 znaków, dużą i małą literę oraz znak specjalny!!!");
+            System.exit(0);
         }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editEmail.setError("Podaj poprawny adres e-mail");
-            editEmail.requestFocus();
-            return;
-        }
-
-        if (haslo.isEmpty()) {
-            editHaslo.setError("Podaj hasło");
-            editHaslo.requestFocus();
-            return;
-        }
-
-        if (haslo.length() < 6) {
-            editHaslo.setError("Hasło musi mieć minimum 6 znaków");
-            editHaslo.requestFocus();
-            return;
-        }
-
-        Toast.makeText(
-                this,
-                "Rejestracja zakończona pomyślnie!",
-                Toast.LENGTH_LONG
-        ).show();
+        System.out.println("Dane są prawidłowe");
+        System.exit(0);
     }
 }
 
