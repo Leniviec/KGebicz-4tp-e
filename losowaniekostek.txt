@@ -81,7 +81,7 @@ xml:
 
 </ScrollView>
 main: 
-package com.example.projekt_2;
+package com.example.myapplication;
 
 import android.os.Bundle;
 import android.graphics.Color;
@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
         buttonRosnaco.setOnClickListener(v -> rosnaco());
         buttonMalejaco.setOnClickListener(v -> malejaco());
     }
-
     public void losuj() {
 
         String tekst = editTextLiczbaKostek.getText().toString();
@@ -135,31 +134,26 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Podaj liczbe kostek", Toast.LENGTH_SHORT).show();
             return;
         }
-
         int liczba = Integer.parseInt(tekst);
 
         if (liczba <= 0 || liczba > 100) {
             Toast.makeText(this, "Podaj liczbe od 1 do 100", Toast.LENGTH_SHORT).show();
             return;
         }
-
         wyniki.clear();
 
         for (int i = 0; i < liczba; i++) {
             int wynik = random.nextInt(6) + 1;
             wyniki.add(wynik);
         }
-
         pokazWyniki();
     }
-
     public void rosnaco() {
 
         if (wyniki.isEmpty()) {
             Toast.makeText(this, "Najpierw losuj kostki", Toast.LENGTH_SHORT).show();
             return;
         }
-
         for (int i = 0; i < wyniki.size(); i++) {
             for (int j = 0; j < wyniki.size() - 1; j++) {
 
@@ -171,17 +165,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         pokazWyniki();
     }
-
     public void malejaco() {
 
         if (wyniki.isEmpty()) {
             Toast.makeText(this, "Najpierw losuj kostki", Toast.LENGTH_SHORT).show();
             return;
         }
-
         for (int i = 0; i < wyniki.size(); i++) {
             for (int j = 0; j < wyniki.size() - 1; j++) {
 
@@ -193,10 +184,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         pokazWyniki();
     }
-
     public void pokazWyniki() {
 
         String tekst = "";
@@ -210,24 +199,13 @@ public class MainActivity extends AppCompatActivity {
             if (i < wyniki.size() - 1) {
                 tekst = tekst + ", ";
             }
-
             TextView kostka = new TextView(this);
 
             kostka.setText("" + wyniki.get(i));
             kostka.setTextSize(24);
             kostka.setTextColor(Color.BLACK);
             kostka.setGravity(Gravity.CENTER);
-            kostka.setBackgroundColor(Color.LTGRAY);
-
-            GridLayout.LayoutParams parametry = new GridLayout.LayoutParams();
-
-            parametry.width = 120;
-            parametry.height = 120;
-            parametry.setMargins(5, 5, 5, 5);
-
-            gridKostki.addView(kostka, parametry);
         }
-
         textViewWyniki.setText(tekst);
     }
 }
