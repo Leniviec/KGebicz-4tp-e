@@ -8,15 +8,14 @@ xml:
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
             android:text="Losowanie kostek"
             android:textSize="28sp"
+            android:gravity="center"
             android:textStyle="bold" />
 
         <TextView
@@ -26,72 +25,62 @@ xml:
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/editTextLiczbaKostek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Podaj liczbe kostek"
             android:inputType="number"
-            android:text="5" />
+            android:text="5"
+            android:id="@+id/editTextLiczbaKostek" />
 
         <Button
-            android:id="@+id/buttonLosuj"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="LOSUJ" />
+            android:text="LOSUJ"
+            android:id="@+id/buttonLosuj" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="Wylosowane kostki:"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <GridLayout
-            android:id="@+id/gridKostki"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:columnCount="1"
-            android:gravity="center"
-            android:useDefaultMargins="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Wyniki:"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textViewWyniki"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Wyniki pojawia sie tutaj"
             android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/buttonRosnaco"
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="SORTUJ ROSNACO" />
+            android:columnCount="5"
+            android:gravity="center"
+            android:id="@+id/gridKostki" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wyniki:"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wyniki pojawia sie tutaj"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:id="@+id/textViewWyniki" />
 
         <Button
-            android:id="@+id/buttonMalejaco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="SORTUJ MALEJACO" />
+            android:text="SORTUJ ROSNACO"
+            android:id="@+id/buttonRosnaco" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SORTUJ MALEJACO"
+            android:id="@+id/buttonMalejaco" />
 
     </LinearLayout>
+
 </ScrollView>
 main: 
-
 package com.example.projekt_2;
 
 import android.os.Bundle;
@@ -118,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewWyniki;
 
     ArrayList<Integer> wyniki = new ArrayList<>();
+
     Random random = new Random();
 
     @Override
@@ -132,135 +122,112 @@ public class MainActivity extends AppCompatActivity {
         gridKostki = findViewById(R.id.gridKostki);
         textViewWyniki = findViewById(R.id.textViewWyniki);
 
-        gridKostki.setColumnCount(5);
-
-        buttonLosuj.setOnClickListener(v -> losujKostki());
-        buttonRosnaco.setOnClickListener(v -> sortujRosnaco());
-        buttonMalejaco.setOnClickListener(v -> sortujMalejaco());
+        buttonLosuj.setOnClickListener(v -> losuj());
+        buttonRosnaco.setOnClickListener(v -> rosnaco());
+        buttonMalejaco.setOnClickListener(v -> malejaco());
     }
 
-    private void losujKostki() {
+    public void losuj() {
 
-        String tekst = editTextLiczbaKostek.getText().toString().trim();
+        String tekst = editTextLiczbaKostek.getText().toString();
 
         if (tekst.isEmpty()) {
             Toast.makeText(this, "Podaj liczbe kostek", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int liczba;
+        int liczba = Integer.parseInt(tekst);
 
-        try {
-            liczba = Integer.parseInt(tekst);
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Nieprawidlowa liczba", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (liczba <= 0) {
-            Toast.makeText(this, "Liczba musi byc wieksza od zera", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (liczba > 100) {
-            Toast.makeText(this, "Maksymalnie 100 kostek", Toast.LENGTH_SHORT).show();
+        if (liczba <= 0 || liczba > 100) {
+            Toast.makeText(this, "Podaj liczbe od 1 do 100", Toast.LENGTH_SHORT).show();
             return;
         }
 
         wyniki.clear();
 
         for (int i = 0; i < liczba; i++) {
-            wyniki.add(random.nextInt(6) + 1);
+            int wynik = random.nextInt(6) + 1;
+            wyniki.add(wynik);
         }
 
-        odswiezWidok();
+        pokazWyniki();
     }
 
-    private void sortujRosnaco() {
+    public void rosnaco() {
 
         if (wyniki.isEmpty()) {
-            Toast.makeText(this, "Najpierw wylosuj kostki", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Najpierw losuj kostki", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        for (int i = 0; i < wyniki.size() - 1; i++) {
-            for (int j = 0; j < wyniki.size() - 1 - i; j++) {
+        for (int i = 0; i < wyniki.size(); i++) {
+            for (int j = 0; j < wyniki.size() - 1; j++) {
 
                 if (wyniki.get(j) > wyniki.get(j + 1)) {
-                    int temp = wyniki.get(j);
+
+                    int pomoc = wyniki.get(j);
                     wyniki.set(j, wyniki.get(j + 1));
-                    wyniki.set(j + 1, temp);
+                    wyniki.set(j + 1, pomoc);
                 }
             }
         }
 
-        odswiezWidok();
+        pokazWyniki();
     }
 
-    private void sortujMalejaco() {
+    public void malejaco() {
 
         if (wyniki.isEmpty()) {
-            Toast.makeText(this, "Najpierw wylosuj kostki", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Najpierw losuj kostki", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        for (int i = 0; i < wyniki.size() - 1; i++) {
-            for (int j = 0; j < wyniki.size() - 1 - i; j++) {
+        for (int i = 0; i < wyniki.size(); i++) {
+            for (int j = 0; j < wyniki.size() - 1; j++) {
 
                 if (wyniki.get(j) < wyniki.get(j + 1)) {
-                    int temp = wyniki.get(j);
+
+                    int pomoc = wyniki.get(j);
                     wyniki.set(j, wyniki.get(j + 1));
-                    wyniki.set(j + 1, temp);
+                    wyniki.set(j + 1, pomoc);
                 }
             }
         }
 
-        odswiezWidok();
+        pokazWyniki();
     }
 
-    private void odswiezWidok() {
+    public void pokazWyniki() {
 
-        StringBuilder tekst = new StringBuilder();
-
-        for (int i = 0; i < wyniki.size(); i++) {
-            tekst.append(wyniki.get(i));
-
-            if (i < wyniki.size() - 1) {
-                tekst.append(", ");
-            }
-        }
-
-        textViewWyniki.setText(tekst.toString());
+        String tekst = "";
 
         gridKostki.removeAllViews();
-        gridKostki.setColumnCount(5);
 
         for (int i = 0; i < wyniki.size(); i++) {
+
+            tekst = tekst + wyniki.get(i);
+
+            if (i < wyniki.size() - 1) {
+                tekst = tekst + ", ";
+            }
 
             TextView kostka = new TextView(this);
 
-            kostka.setText(String.valueOf(wyniki.get(i)));
+            kostka.setText("" + wyniki.get(i));
             kostka.setTextSize(24);
             kostka.setTextColor(Color.BLACK);
             kostka.setGravity(Gravity.CENTER);
             kostka.setBackgroundColor(Color.LTGRAY);
 
-            GridLayout.LayoutParams parametry =
-                    new GridLayout.LayoutParams();
+            GridLayout.LayoutParams parametry = new GridLayout.LayoutParams();
 
-            int rozmiar = dpNaPx(52);
-            int odstep = dpNaPx(4);
-
-            parametry.width = rozmiar;
-            parametry.height = rozmiar;
-
-            parametry.setMargins(odstep, odstep, odstep, odstep);
+            parametry.width = 120;
+            parametry.height = 120;
+            parametry.setMargins(5, 5, 5, 5);
 
             gridKostki.addView(kostka, parametry);
         }
-    }
 
-    private int dpNaPx(int dp) {
-        return (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
+        textViewWyniki.setText(tekst);
     }
 }
