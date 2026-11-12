@@ -1,0 +1,72 @@
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.boot.CommandLineRunner;
+
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+
+@Component
+class PriceList {
+    public double getPrice() {
+        return 9.50;
+    }
+}
+
+@Component
+class Barista {
+    public void makeCoffee() {
+        System.out.println("Robie kawe...");
+    }
+}
+
+@Service
+class Cashier {
+    private PriceList priceList;
+
+    public Cashier(PriceList priceList) {
+        this.priceList = priceList;
+    }
+
+    public double countPrice(int number) {
+        return priceList.getPrice() * number;
+    }
+}
+
+@Service
+class CoffeeShop {
+    private Barista barista;
+    private Cashier cashier;
+
+    public CoffeeShop(Barista barista, Cashier cashier) {
+        this.barista = barista;
+        this.cashier = cashier;
+    }
+
+    public void sell(int number) {
+        barista.makeCoffee();
+
+        double price = cashier.countPrice(number);
+
+        System.out.println("Cena: " + price + " zl");
+    }
+}
+
+@Component
+class ShopRunner implements CommandLineRunner {
+    private CoffeeShop shop;
+
+    public ShopRunner(CoffeeShop shop) {
+        this.shop = shop;
+    }
+
+    public void run(String... args) {
+        shop.sell(3);
+    }
+}
